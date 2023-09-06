@@ -1,1 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+<style>
+    .body {
+        background-color: blueviolet;
+    }
+
+    .imgLogo {
+        height: 50px;
+        width: 120px;
+    }
+
+    a:hover {
+        text-decoration: none;
+        color: rgb(34, 168, 67);
+        font-weight: bold;
+    }
+
+    #slide-out li a:hover {
+        color: rgb(10, 65, 10);
+        font-weight: bold;
+    }
+
+    .divCenter {
+        margin: auto;
+        width: 50%;
+    }
+
+    .modal-body .form-horizontal {
+        width: 100%;
+    }
+</style>
+
+<body style="background-color: blueviolet;">
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="alert alert-primary text-center">
+                    CRUD using JS Local Storage
+                </h1>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="form">
+                            <input type="hidden" name="id" id="inputBookId">
+                            <label for="CRUD using JS Local Storage">Title</label>
+                            <input style="background-color: rgb(146, 165, 146);" type="text" placeholder="Title"
+                                class="form-control" id="inputBookTitle" required>
+                            <br>
+                            <label for="inputBookAuthor">Author</label>
+                            <input style="background-color: rgb(146, 165, 146);" type="text" placeholder="Author"
+                                class="form-control" id="inputBookAuthor" required>
+                            <br>
+                            <label for="inputBookYear">Year</label>
+                            <input style="background-color: rgb(146, 165, 146);" type="number" placeholder="Tahun"
+                                class="form-control" id="inputBookYear" required>
+                            <br>
+                            <label for="inputBookIsComplete">Finished reading</label>
+                            <input id="inputBookIsComplete" type="checkbox">
+                            <br>
+                            <br>
+                            <button class="btn btn-sm btn-primary" type="button" onclick="save()">Save</button>
+                            <button class="btn btn-sm btn-primary" type="button" onclick="clearData()">Reset</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Unread</h2>
+                        <div class="table-responsive">
+                            <table id="datatable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Year</th>
+                                        <th>Read</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <hr>
+                        <h2>Read</h2>
+                        <div class="table-responsive">
+                            <table id="datatable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Year</th>
+                                        <th>Unread</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table2">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+    <script src="main.js"></script>
+    <script>
+        allData()
+    </script>
+    <script>
+        function save() {
+            var read = document.getElementById('inputBookIsComplete');
+            if (read.checked == true) {
+                bookList = JSON.parse(localStorage.getItem('listItem3')) ?? []
+                var id
+                bookList.length != 0 ? bookList.findLast((item) => id = item.id) : id = 0
+
+                if (document.getElementById('inputBookId').value) {
+                    bookList.forEach(value => {
+                        if (document.getElementById('inputBookId').value == value.id) {
+                            value.title = document.getElementById('inputBookTitle').value,
+                                value.author = document.getElementById('inputBookAuthor').value,
+                                value.year = document.getElementById('inputBookYear').value,
+                                value.isComplete = 1
+                        }
+                    });
+                    document.getElementById('id').value = ''
+                } else {
+                    var item = {
+                        id: id + 1,
+                        title: document.getElementById('inputBookTitle').value,
+                        author: document.getElementById('inputBookAuthor').value,
+                        year: document.getElementById('inputBookYear').value,
+                        isComplete: 1,
+                    }
+                    bookList.push(item)
+                }
+                localStorage.setItem('listItem3', JSON.stringify(bookList))
+            } else {
+
+                bookList2 = JSON.parse(localStorage.getItem('listItem4')) ?? []
+                var id
+                bookList2.length != 0 ? bookList.findLast((item) => id = item.id) : id = 0
+                if (document.getElementById('inputBookId').value) {
+                    bookList2.forEach(value => {
+                        if (document.getElementById('inputBookId').value == value.id) {
+                            value.title = document.getElementById('inputBookTitle').value,
+                                value.author = document.getElementById('inputBookAuthor').value,
+                                value.year = document.getElementById('inputBookYear').value,
+                                value.isComplete = 0
+                        }
+                    });
+                    document.getElementById('inputBookId').value = ''
+                } else {
+                    var item = {
+                        id: id + 1,
+                        title: document.getElementById('inputBookTitle').value,
+                        author: document.getElementById('inputBookAuthor').value,
+                        year: document.getElementById('inputBookYear').value,
+                        isComplete: 0,
+                    }
+                    bookList2.push(item)
+                }
+                localStorage.setItem('listItem4', JSON.stringify(bookList2))
+            }
+            allData()
+            document.getElementById('form').reset()
+
+        }
+        function allData() {
+
+            table.innerHTML = ``
+            bookList = JSON.parse(localStorage.getItem('listItem4')) ?? []
+            bookList.forEach(function (value, i) {
+
+                var table = document.getElementById('table')
+                // if(value.isComplete == 0){
+                table.innerHTML += `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>${value.title}</td>
+                        <td>${value.author}</td>
+                        <td>${value.year}</td>
+                        <td><button class="btn btn-sm btn-warning" onclick="read(${value.id},'${value.title}','${value.author}',${value.year})">
+                        <i class="fa fa-check"></i>
+                        </button></td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="find(${value.id})">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="removeData4(${value.id})">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`
+                // }
+
+            })
+            table2.innerHTML = ``
+            bookList2 = JSON.parse(localStorage.getItem('listItem3')) ?? []
+
+            bookList2.forEach(function (value2, i) {
+
+                var table2 = document.getElementById('table2')
+                // console.log(value2.isComplete);
+                // if(value2.isComplete == 1){
+                table2.innerHTML += `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>${value2.title}</td>
+                        <td>${value2.author}</td>
+                        <td>${value2.year}</td>
+                        <td><button class="btn btn-sm btn-warning" onclick="read2(${value2.id},'${value2.title}','${value2.author}',${value2.year})">
+                        <i class="fa fa-check"></i>
+                        </button></td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="find(${value2.id})">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="removeData3(${value2.id})">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`
+                // }
+
+            })
+
+        }
+        function removeData3(id) {
+
+            bookList = JSON.parse(localStorage.getItem('listItem3')) ?? []
+            bookList = bookList.filter(function (value) {
+                return value.id != id;
+            });
+            // localStorage.clear();
+            localStorage.setItem('listItem3', JSON.stringify(bookList))
+            allData()
+        }
+        function removeData4(id) {
+            bookList = JSON.parse(localStorage.getItem('listItem4')) ?? []
+            bookList = bookList.filter(function (value) {
+                return value.id != id;
+            });
+            localStorage.setItem('listItem4', JSON.stringify(bookList))
+            allData()
+        }
+        function find(id) {
+            bookList = JSON.parse(localStorage.getItem('listItem4')) ?? []
+            bookList.forEach(function (value) {
+                if (value.id == id) {
+                    console.log(id);
+                    document.getElementById('inputBookId').value = id
+                    document.getElementById('inputBookTitle').value = value.title
+                    document.getElementById('inputBookAuthor').value = value.author
+                    document.getElementById('inputBookYear').value = value.year
+                }
+            })
+        }
+        function read(id1, title1, author1, year1) {
+            if (id1) {
+                var item = [{
+                    id: id1,
+                    title: title1,
+                    author: author1,
+                    year: year1,
+                    isComplete: 1,
+                }];
+                bookList = JSON.parse(localStorage.getItem('listItem3')) ?? []
+                books = item.concat(bookList);
+                var itemString = JSON.stringify(books);
+                localStorage.setItem('listItem3', itemString);
+            }
+
+            bookList4 = JSON.parse(localStorage.getItem('listItem4')) ?? []
+            bookList4 = bookList4.filter(function (value) {
+                return value.id != id1;
+            });
+            localStorage.setItem('listItem4', JSON.stringify(bookList4))
+            allData()
+        }
+        function read2(id1, title1, author1, year1) {
+            if (id1) {
+                var item = [{
+                    id: id1,
+                    title: title1,
+                    author: author1,
+                    year: year1,
+                    isComplete: 1,
+                }];
+                bookList = JSON.parse(localStorage.getItem('listItem4')) ?? []
+                books = item.concat(bookList);
+                var itemString = JSON.stringify(books);
+                localStorage.setItem('listItem4', itemString);
+            }
+
+            bookList3 = JSON.parse(localStorage.getItem('listItem3')) ?? []
+            bookList3 = bookList3.filter(function (value) {
+                return value.id != id1;
+            });
+            localStorage.setItem('listItem3', JSON.stringify(bookList3))
+            allData()
+        }
+
+
+    </script>
+
+</body>
+
+</html>
